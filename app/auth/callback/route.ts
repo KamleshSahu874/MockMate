@@ -6,21 +6,20 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get("code");
   const next = requestUrl.searchParams.get("next");
 
-  // Only allow local paths to prevent open redirects.
   const nextPath =
     next && next.startsWith("/") && !next.startsWith("//")
       ? next
       : "/interview";
-
-  const response = NextResponse.redirect(
-    new URL(nextPath, requestUrl.origin)
-  );
 
   if (!code) {
     return NextResponse.redirect(
       new URL("/login?error=confirmation_failed", requestUrl.origin)
     );
   }
+
+  const response = NextResponse.redirect(
+    new URL(nextPath, requestUrl.origin)
+  );
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
